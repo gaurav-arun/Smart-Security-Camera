@@ -5,8 +5,8 @@ import time
 import numpy as np
 
 class VideoCamera(object):
-    def __init__(self, flip = False):
-        self.vs = PiVideoStream().start()
+    def __init__(self, flip = False, resolution=(320, 240), framerate=32):
+        self.vs = PiVideoStream(resolution=resolution, framerate=framerate).start()
         self.flip = flip
         time.sleep(2.0)
 
