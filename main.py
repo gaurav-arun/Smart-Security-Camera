@@ -1,6 +1,6 @@
 import cv2
 import sys
-from mail import sendEmail
+#from mail import sendEmail
 from flask import Flask, render_template, Response
 from camera import VideoCamera
 from flask_basicauth import BasicAuth
@@ -13,8 +13,8 @@ object_classifier = cv2.CascadeClassifier("models/fullbody_recognition_model.xml
 
 # App Globals (do not edit)
 app = Flask(__name__)
-app.config['BASIC_AUTH_USERNAME'] = 'CHANGE_ME_USERNAME'
-app.config['BASIC_AUTH_PASSWORD'] = 'CHANGE_ME_PLEASE'
+app.config['BASIC_AUTH_USERNAME'] = 'test'
+app.config['BASIC_AUTH_PASSWORD'] = 'test'
 app.config['BASIC_AUTH_FORCE'] = True
 
 basic_auth = BasicAuth(app)
@@ -53,4 +53,4 @@ if __name__ == '__main__':
     t = threading.Thread(target=check_for_objects, args=())
     t.daemon = True
     t.start()
-    app.run(host='0.0.0.0', debug=False)
+    app.run(host='0.0.0.0', port='8000', debug=False)
