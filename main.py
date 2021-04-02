@@ -33,6 +33,7 @@ def check_for_objects():
 		except:
 			print("Error sending email: ", sys.exc_info()[0])
 
+
 @app.route('/')
 @basic_auth.required
 def index():
@@ -40,14 +41,34 @@ def index():
 
 def gen(camera):
     while True:
-        frame = camera.get_frame()
+        frame = camera.get_frame ()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
 
 @app.route('/video_feed')
 def video_feed():
     return Response(gen(video_camera),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+def gen_obj(camera):
+    while True:
+        try:
+            print('Detecting object in the frame ...')
+            frame, found_obj = video_camera.get_object(object_classifier)
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+            print("done!")
+        except:
+            print("Error detecting object ", sys.exc_info()[0])
+
+
+@app.route('/video_feed_with_obj')
+def video_feed_with_obj():
+    return Response(gen_obj(video_camera),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == '__main__':
     t = threading.Thread(target=check_for_objects, args=())
